@@ -7,11 +7,7 @@ def create_app(path_to_files):
 
     @app.route("/")
     def get_root_ls():
-        path = ''
-        if path_to_files:
-            path = set_work_dir(path_to_files)
-        else:
-            path = set_work_dir()
+        path = set_work_dir(path_to_files)
 
         file_contents = subprocess.run(['cat', path], capture_output=True, text=True)
         print("file_contents err: ", file_contents.stderr)
@@ -23,7 +19,12 @@ def create_app(path_to_files):
             # TODO: return a proper JSON response with file name, file type, owner, and size
             result = file_contents.stdout
 
-        return result
+        response_json = {
+                "success": True,
+                "message": "File system accessed sucessfully",
+                "data": { "files": result }
+                }
+        return response_json
 
     @app.route("/<path:params>")
     def ls(params):
@@ -40,6 +41,11 @@ def create_app(path_to_files):
             # TODO: return a proper JSON response with file name, file type, owner, and size
             result = file_contents.stdout
 
-        return result
+        response_json = {
+                "success": True,
+                "message": "File system accessed sucessfully",
+                "data": { "files": result }
+                }
+        return response_json
 
     return app
