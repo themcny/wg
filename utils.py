@@ -2,9 +2,7 @@ import os
 import re
 import subprocess
 
-def set_work_dir():
-    work_dir = os.environ["WORK_DIR"]
-
+def set_work_dir(work_dir=os.environ["WORK_DIR"]):
     if not work_dir.endswith('/'):
         work_dir = work_dir + './'
 
