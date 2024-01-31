@@ -1,31 +1,39 @@
 import subprocess
-from flask import Flask
+from errors import *
+from flask import Flask, jsonify
 from utils import *
+
 
 def create_app(path_to_files):
     app = Flask(__name__)
 
     @app.route("/")
     @app.route("/<path:params>")
-    def ls(params=''):
-        path = set_work_dir() + params
-        print("path: ", path)
+    def get_files(params=''):
+        path = set_work_dir(path_to_files) + params
 
-        file_contents = subprocess.run(['cat', path], capture_output=True, text=True)
-        print("file_contents err: ", file_contents.stderr)
-
-        if file_contents.stderr:
-            path = path + "/"
-            result = parse_ls_result(path)
-        else:
-            # TODO: return a proper JSON response with file name, file type, owner, and size
-            result = file_contents.stdout
-
+        result = parse_file_information(path)
         response_json = {
-                "success": True,
-                "message": "File system accessed sucessfully",
-                "data": { "files": result }
-                }
-        return response_json
+            "content_type": "application/json",
+            "data": {
+                "files": result
+            },
+            "message": "File system accessed sucessfully",
+            "success": True
+        }
+        return jsonify(response_json), 200
+
+    @app.errorhandler(APIError)
+    def handle_exception(e):
+        """Return JSON instead of HTML for HTTP errors."""
+        response_json = {
+            "content_type": "application/json",
+            "data": {
+                "error_message": e.message
+            },
+            "message": "An error occured.",
+            "success": False
+        }
+        return jsonify(response_json), 400
 
     return app
