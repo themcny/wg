@@ -25,7 +25,7 @@ def create_app(path_to_files):
 
     @app.errorhandler(APIError)
     def handle_exception(e):
-        """Return JSON instead of HTML for HTTP errors."""
+        """Return JSON instead of HTML for API errors."""
         response_json = {
             "content_type": "application/json",
             "data": {
