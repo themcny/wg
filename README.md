@@ -20,10 +20,23 @@ sh run.sh
 * Note: It will ask for input to set the file system you want to explore.
 
 
-### How to Test the Application
+### How to (Manually) Test the Application
 
 ```
 curl http://127.0.0.1:5000/
+```
+
+
+### How to Run (Automated) Tests
+
+```
+python3 test_utils.py
+```
+
+OR
+
+```
+sh run_tests.sh
 ```
 
 
